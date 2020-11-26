@@ -7,22 +7,25 @@ import Backdrop from "../UIElements/Backdrop";
 import "./MainNavigation.css";
 
 const MainNavigation = (props) => {
-  const [drawIsOpen, setDrawIsOpen] = useState(false);
+  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
 
   return (
     <Fragment>
-      {drawIsOpen && <Backdrop onClick={() => setDrawIsOpen(!drawIsOpen)} />}
-      {drawIsOpen && (
-        <SideDrawer>
-          <nav className="main-navigation__drawer-nav">
-            <NavLinks />
-          </nav>
-        </SideDrawer>
+      {drawerIsOpen && (
+        <Backdrop onClick={() => setDrawerIsOpen(!drawerIsOpen)} />
       )}
+      <SideDrawer
+        show={drawerIsOpen}
+        onClick={() => setDrawerIsOpen(!drawerIsOpen)}
+      >
+        <nav className="main-navigation__drawer-nav">
+          <NavLinks />
+        </nav>
+      </SideDrawer>
       <MainHeader>
         <button
           className="main-navigation__menu-btn"
-          onClick={() => setDrawIsOpen(!drawIsOpen)}
+          onClick={() => setDrawerIsOpen(!drawerIsOpen)}
         >
           <span />
           <span />
