@@ -20,7 +20,8 @@ export const DUMMY_PLACES = [
     id: "p2",
     title: "Empire State",
     description: "One Of the Most Famous Sky Scrappers in the world ",
-    imageUrl: "https://images.app.goo.gl/qnTNhaq4cKaiZgus5",
+    imageUrl:
+      "https://image.cnbcfm.com/api/v1/image/101081470-126451421.jpg?v=1532564623&w=1600&h=900",
     address: "20 w 34th St, New York, NY 10001",
     location: {
       lat: 40.7484405,
