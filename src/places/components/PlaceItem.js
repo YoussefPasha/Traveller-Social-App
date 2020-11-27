@@ -7,20 +7,45 @@ import "./PlaceItem.css";
 
 const PlaceItem = (props) => {
   const [showMap, setShowMap] = useState(false);
-  const openAndClosedModalHandler = () => setShowMap(!showMap);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const openAndCloseModalHandler = () => setShowMap(!showMap);
+  const openAndCloseShowConfirmModalHandler = () =>
+    setShowConfirmModal(!showConfirmModal);
+  const confirmDeleteHandler = () => {
+    setShowConfirmModal(false);
+    console.log("DELETING...");
+  };
   return (
     <Fragment>
       <Modal
         show={showMap}
-        onCancel={openAndClosedModalHandler}
+        onCancel={openAndCloseModalHandler}
         header={props.address}
         contentClass="place-item__modal-content"
         footerClass="place-item__modal-actions"
-        footer={<Button onClick={openAndClosedModalHandler}>CLOSE</Button>}
+        footer={<Button onClick={openAndCloseModalHandler}>CLOSE</Button>}
       >
         <div className="map-container">
           <Map center={props.coordinates} zoom={12.5} />
         </div>
+      </Modal>
+      <Modal
+        show={showConfirmModal}
+        onCancel={openAndCloseShowConfirmModalHandler}
+        header="Are you sure?"
+        footerClass="place-item__modal-actions"
+        footer={
+          <Fragment>
+            <Button inverse onClick={openAndCloseShowConfirmModalHandler}>
+              CANCEL
+            </Button>
+            <Button danger onClick={confirmDeleteHandler}>
+              DELETE
+            </Button>
+          </Fragment>
+        }
+      >
+        <p>Do you want to proceed and delete this place? </p>
       </Modal>
       <li className="place-item">
         <Card className="place-item__content">
@@ -37,11 +62,13 @@ const PlaceItem = (props) => {
             <p>{props.description}</p>
           </div>
           <div className="place-item__actions">
-            <Button inverse onClick={openAndClosedModalHandler}>
+            <Button inverse onClick={openAndCloseModalHandler}>
               VIEW ON MAP
             </Button>
             <Button to={`/places/${props.id}`}>EDIT</Button>
-            <Button danger>DELETE</Button>
+            <Button danger onClick={openAndCloseShowConfirmModalHandler}>
+              DELETE
+            </Button>
           </div>
         </Card>
       </li>
