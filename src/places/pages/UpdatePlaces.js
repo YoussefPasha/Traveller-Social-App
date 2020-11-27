@@ -8,6 +8,7 @@ import {
   VALIDATOR_REQUIRE,
 } from "../../shared/util/validators";
 
+import "./PlaceForm.css";
 const UpdatePlaces = (props) => {
   const placeId = useParams().placeId;
   const identifiedPlace = DUMMY_PLACES.find((p) => p.id === placeId);
@@ -19,7 +20,7 @@ const UpdatePlaces = (props) => {
     );
   }
   return (
-    <form>
+    <form className="place-form">
       <Input
         id="title"
         element="input"
@@ -42,7 +43,7 @@ const UpdatePlaces = (props) => {
         value={identifiedPlace.description}
         valid={true}
       />
-      <Button type="submit" disabled={false}>
+      <Button type="submit" disabled={true}>
         UPDATE PLACE
       </Button>
     </form>

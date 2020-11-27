@@ -17,8 +17,8 @@ const App = () => {
       <main>
         <Switch>
           <Route path="/" component={Users} exact />
-          <Route path="/:userId/places" component={UserPlaces} exact />
           <Route path="/places/new" component={NewPlace} exact />
+          <Route path="/:userId/places" component={UserPlaces} exact />
           <Route path="/places/:placeId" component={UpdatePlaces} exact />
           <Redirect to="/" />
         </Switch>
