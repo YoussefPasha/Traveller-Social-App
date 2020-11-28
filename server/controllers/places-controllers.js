@@ -1,4 +1,4 @@
-const uuid = require("uuid/v4")
+const uuid = require("uuid")
 
 const HttpError = require("../models/http-error");
 
@@ -44,7 +44,7 @@ const getPlaceByUserId = (req, res, next) => {
 const createPlace = (req, res, next) => {
   const { creator, title, description, coordinates, address } = req.body;
   const createdPlace = {
-    id: uuid(),
+    id: uuid.v4(),
     title,
     description,
     location: coordinates,
