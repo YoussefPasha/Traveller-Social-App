@@ -1,4 +1,5 @@
 const uuid = require("uuid");
+const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
 
@@ -33,15 +34,17 @@ const getPlacesByUserId = (req, res, next) => {
     return p.creator === userId;
   });
   if (!places || places.length === 0) {
-    throw new HttpError(
-      "Could not find places for the provided user id.",
-      404
-    );
+    throw new HttpError("Could not find places for the provided user id.", 404);
   }
   res.json({ places });
 };
 
 const createPlace = (req, res, next) => {
+  const error = validationResult(req);
+  if (error.isEmpty()) {
+    
+    throw new HttpError("Invalid data entry", 422);
+  }
   const { creator, title, description, coordinates, address } = req.body;
   const createdPlace = {
     id: uuid.v4(),
