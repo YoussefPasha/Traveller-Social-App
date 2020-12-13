@@ -1,5 +1,6 @@
 const uuid = require("uuid");
 const HttpError = require("../models/http-error");
+const { validationResult } = require("express-validator");
 const DUMMY_USERS = [
   {
     id: "u1",
@@ -13,6 +14,10 @@ const getUsers = (req, res, next) => {
   res.json({ users: DUMMY_USERS });
 };
 const signup = (req, res, next) => {
+  const error = validationResult(req);
+  if (error.isEmpty()) {
+    throw new HttpError("Invalid data entry", 422);
+  }
   const { name, email, password } = req.body;
 
   const hasUser = DUMMY_USERS.find((u) => u.email === email);
