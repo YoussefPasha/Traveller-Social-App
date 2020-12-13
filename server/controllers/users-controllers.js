@@ -14,6 +14,12 @@ const getUsers = (req, res, next) => {
 };
 const signup = (req, res, next) => {
   const { name, email, password } = req.body;
+
+  const hasUser = DUMMY_USERS.find((u) => u.email === email);
+  if (hasUser) {
+    throw new HttpError("there is account with this email", 401);
+  }
+
   const createUser = {
     id: uuid.v4(),
     name,
@@ -26,7 +32,8 @@ const signup = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
   const identifiedUser = DUMMY_USERS.find((u) => u.email === email);
-  if (!identifiedUser || identifiedUser.password === password) {
+  if (!identifiedUser || identifiedUser.password !== password) {
+    res.json({ msg: identifiedUser });
     throw new HttpError("Could not identify User", 401);
   }
   res.json({ message: "Logged in!" });

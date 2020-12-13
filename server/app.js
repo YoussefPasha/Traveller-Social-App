@@ -2,12 +2,14 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const placesRoutes = require("./routes/places-routes");
+const userRoutes = require("./routes/users-routes");
 const HttpError = require("./models/http-error");
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use("/api/places", placesRoutes);
+app.use("/api/users", userRoutes);
 
 // normal middleware handle error requests on a server
 app.use((req, res, next) => {
