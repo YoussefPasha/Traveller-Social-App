@@ -2,7 +2,8 @@ const uuid = require("uuid");
 const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
-
+const getCoordinates = require("../utils/location");
+const getCoordinatesForAddress = require("../utils/location");
 let DUMMY_PLACES = [
   {
     id: "p1",
@@ -44,7 +45,8 @@ const createPlace = (req, res, next) => {
   if (error.isEmpty()) {
     throw new HttpError("Invalid data entry", 422);
   }
-  const { creator, title, description, coordinates, address } = req.body;
+  const { creator, title, description, address } = req.body;
+  const coordinates = getCoordinatesForAddress();
   const createdPlace = {
     id: uuid.v4(),
     title,
