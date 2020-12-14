@@ -1,4 +1,3 @@
-const uuid = require("uuid");
 const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
@@ -19,15 +18,14 @@ let DUMMY_PLACES = [
   },
 ];
 
-const getPlaceById = (req, res, next) => {
+const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
-  const place = DUMMY_PLACES.find((p) => {
-    return p.id === placeId;
-  });
-  if (!place) {
-    throw new HttpError("Could not find a place for the provided id.", 404);
+  try {
+    const place = await Place.findById(placeId);
+    res.json({ place: place.toObject({ getters: true }) });
+  } catch (error) {
+    throw new HttpError(error.message, 500);
   }
-  res.json({ place });
 };
 
 const getPlacesByUserId = (req, res, next) => {
