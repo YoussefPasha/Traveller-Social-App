@@ -2,8 +2,9 @@ const uuid = require("uuid");
 const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
-const getCoordinates = require("../utils/location");
 const getCoordinatesForAddress = require("../utils/location");
+const Place = require("../models/places");
+
 let DUMMY_PLACES = [
   {
     id: "p1",
@@ -40,22 +41,27 @@ const getPlacesByUserId = (req, res, next) => {
   res.json({ places });
 };
 
-const createPlace = (req, res, next) => {
+const createPlace = async (req, res, next) => {
   const error = validationResult(req);
-  if (error.isEmpty()) {
+  if (!error.isEmpty()) {
     throw new HttpError("Invalid data entry", 422);
   }
   const { creator, title, description, address } = req.body;
-  const coordinates = getCoordinatesForAddress();
-  const createdPlace = {
-    id: uuid.v4(),
+  const coordinates = getCoordinatesForAddress(address);
+  const createdPlace = new Place({
     title,
     description,
-    location: coordinates,
     address,
+    location: coordinates,
+    image:
+      "https://images.squarespace-cdn.com/content/v1/53170656e4b04f773bf88c62/1582219584487-3OAPNCAZBQ3FVXGZ6BK9/ke17ZwdGBToddI8pDm48kJ7b_czD8K-GlrMxD5SCZRIUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHb4Mgx5VOko7O0Fa25dY_3m0NvURTqMSdutKBeg48siOabULyivEAjpE6UPV3N36/invite-to-paradise-maldives-holiday-honeymoon-packages+2.jpg",
     creator,
-  };
-  DUMMY_PLACES.push(createdPlace);
+  });
+  try {
+    await createdPlace.save();
+  } catch (error) {
+    throw new HttpError(error.message, 500);
+  }
   res.status(201).json({ place: createdPlace });
 };
 
