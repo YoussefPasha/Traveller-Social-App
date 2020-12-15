@@ -17,7 +17,7 @@ const signup = async (req, res, next) => {
   if (!error.isEmpty()) {
     return next(new HttpError("Invalid data entry", 422));
   }
-  const { name, email, password, places } = req.body;
+  const { name, email, password } = req.body;
 
   let existingUser;
   try {
@@ -41,7 +41,7 @@ const signup = async (req, res, next) => {
     image:
       "https://avatars0.githubusercontent.com/u/45726395?s=400&u=d88a81c02b379929663b943aafb3be769bec9fc4&v=4",
     password,
-    places,
+    places: []
   });
 
   try {
