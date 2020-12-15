@@ -1,8 +1,10 @@
+const Mongoose = require("mongoose");
 const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
 const getCoordinatesForAddress = require("../utils/location");
 const Place = require("../models/places");
+const User = require("../models/user");
 
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
@@ -50,8 +52,28 @@ const createPlace = async (req, res, next) => {
       "https://images.squarespace-cdn.com/content/v1/53170656e4b04f773bf88c62/1582219584487-3OAPNCAZBQ3FVXGZ6BK9/ke17ZwdGBToddI8pDm48kJ7b_czD8K-GlrMxD5SCZRIUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHb4Mgx5VOko7O0Fa25dY_3m0NvURTqMSdutKBeg48siOabULyivEAjpE6UPV3N36/invite-to-paradise-maldives-holiday-honeymoon-packages+2.jpg",
     creator,
   });
+
+  let user;
+
   try {
-    await createdPlace.save();
+    user = await User.findById(creator);
+  } catch (error) {
+    return next(new HttpError("Creating Place Failed, Please try again", 500));
+  }
+
+  if (!user) {
+    return next(
+      new HttpError("We could not find user for this provided id", 404)
+    );
+  }
+
+  try {
+    const sess = await Mongoose.startSession();
+    sess.startTransaction();
+    await createdPlace.save({ session: sess });
+    user.places.push(createdPlace);
+    await user.save({ session: sess });
+    await sess.commitTransaction();
   } catch (error) {
     return next(new HttpError(error.message, 500));
   }
