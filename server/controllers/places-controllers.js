@@ -10,7 +10,7 @@ const getPlaceById = async (req, res, next) => {
     const place = await Place.findById(placeId);
     res.json({ place: place.toObject({ getters: true }) });
   } catch (error) {
-    throw new HttpError(error.message, 500);
+    return next(new HttpError(error.message, 500));
   }
 };
 
@@ -20,7 +20,9 @@ const getPlacesByUserId = async (req, res, next) => {
   try {
     places = await Place.find({ creator: userId });
   } catch (error) {
-    throw new HttpError("Fetching places failed, please try again later", 500);
+    return next(
+      new HttpError("Fetching places failed, please try again later", 500)
+    );
   }
   if (!places || places.length === 0) {
     return next(
@@ -35,7 +37,7 @@ const getPlacesByUserId = async (req, res, next) => {
 const createPlace = async (req, res, next) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
-    throw new HttpError("Invalid data entry", 422);
+    return next(new HttpError("Invalid data entry", 422));
   }
   const { creator, title, description, address } = req.body;
   const coordinates = getCoordinatesForAddress(address);
@@ -51,7 +53,7 @@ const createPlace = async (req, res, next) => {
   try {
     await createdPlace.save();
   } catch (error) {
-    throw new HttpError(error.message, 500);
+    return next(new HttpError(error.message, 500));
   }
   res.status(201).json({ place: createdPlace });
 };
@@ -59,7 +61,7 @@ const createPlace = async (req, res, next) => {
 const updatePlace = async (req, res, next) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
-    throw new HttpError("Invalid data entry", 422);
+    return next(new HttpError("Invalid data entry", 422));
   }
   const { title, description } = req.body;
   const placeId = req.params.pid;
