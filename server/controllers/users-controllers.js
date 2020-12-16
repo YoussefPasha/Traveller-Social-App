@@ -41,7 +41,7 @@ const signup = async (req, res, next) => {
     image:
       "https://avatars0.githubusercontent.com/u/45726395?s=400&u=d88a81c02b379929663b943aafb3be769bec9fc4&v=4",
     password,
-    places: []
+    places: [],
   });
 
   try {
@@ -67,7 +67,10 @@ const login = async (req, res, next) => {
       new HttpError("Invalid credentials, could not log you in.", 401)
     );
   }
-  res.json({ message: "Logged in!" });
+  res.json({
+    message: "Logged in!",
+    user: existingUser.toObject({ getters: true }),
+  });
 };
 
 exports.getUsers = getUsers;
