@@ -1,8 +1,11 @@
-import React, { useContext } from "react";
+import React, { Fragment, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
@@ -31,6 +34,8 @@ const NewPlace = () => {
     false
   );
 
+  const history = useHistory();
+
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
 
@@ -43,15 +48,18 @@ const NewPlace = () => {
           description: formState.inputs.description.value,
           address: formState.inputs.address.value,
           creator: auth.userId,
-        })
-      );
-      // TODO: redirect user to different page
+        }),
+        { "Content-Type": "application/json" }
+        );
+        history.push('/');
     } catch (error) {}
   };
 
   return (
-    <div>
+    <Fragment>
+      <ErrorModal error={error} onClear={clearError} />
       <form className="place-form" onSubmit={placeSubmitHandler}>
+        {isLoading && <LoadingSpinner asOverlay />}
         <Input
           type="text"
           label="Title"
@@ -83,7 +91,7 @@ const NewPlace = () => {
           ADD Place
         </Button>
       </form>
-    </div>
+    </Fragment>
   );
 };
 
