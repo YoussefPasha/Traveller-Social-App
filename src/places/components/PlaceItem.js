@@ -62,7 +62,7 @@ const PlaceItem = (props) => {
       </Modal>
       <li className="place-item">
         <Card className="place-item__content">
-      {isLoading && <LoadingSpinner asOverlay/>}
+          {isLoading && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
             <img
               style={{ objectFit: "fill" }}
@@ -79,11 +79,11 @@ const PlaceItem = (props) => {
             <Button inverse onClick={openAndCloseModalHandler}>
               VIEW ON MAP
             </Button>
-            {auth.isLoggedIn && (
+            {auth.userId === props.creatorId && (
               <Button to={`/places/${props.id}`}>EDIT</Button>
             )}
 
-            {auth.isLoggedIn && (
+            {auth.userId === props.creatorId && (
               <Button danger onClick={openAndCloseShowConfirmModalHandler}>
                 DELETE
               </Button>
