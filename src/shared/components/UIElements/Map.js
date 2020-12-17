@@ -1,31 +1,27 @@
-import React, { useRef, useEffect } from "react";
-import mapboxgl from "mapbox-gl";
-import "./Map.css";
-mapboxgl.accessToken =
-  "pk.eyJ1IjoieW91c3NlZnBhc2hhIiwiYSI6ImNraHo5MnRkbTBkOGEyenFoazgwMW8yM3UifQ.cJ7c1h0Ii_JsyZYPsSG1rQ";
+import * as React from "react";
+import { Component } from "react";
+import ReactMapGL, { GeolocateControl } from "react-map-gl";
 
-const Map = (props) => {
-  const mapContainerRef = useRef(null);
-  console.log(props.center);
-  useEffect(() => {
-    const map = new mapboxgl.Map({
-      container: mapContainerRef.current,
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: props.center,
-      zoom: props.zoom,
-    });
+export default class Map extends Component {
+  state = {
+    viewport: { longitude: this.props.center.lng, latitude: this.props.center.lat, zoom: 14 },
+  };
 
-    map.addControl(new mapboxgl.NavigationControl(), "bottom-right");
-
-    return () => map.remove();
-  }, [props.center, props.zoom]);
-  return (
-    <div
-      className={`map-container ${props.className}`}
-      style={props.style}
-      ref={mapContainerRef}
-    />
-  );
-};
-
-export default Map;
+  render() {
+    const { viewport } = this.state;
+    return (
+      <ReactMapGL
+      {...viewport}
+        mapboxApiAccessToken="pk.eyJ1IjoieW91c3NlZnBhc2hhIiwiYSI6ImNraHo5MnRkbTBkOGEyenFoazgwMW8yM3UifQ.cJ7c1h0Ii_JsyZYPsSG1rQ"
+        width="100vw"
+        height="100vh"
+        onViewportChange={(viewport) => this.setState({ viewport })}
+      >
+        <GeolocateControl
+          positionOptions={{ enableHighAccuracy: true }}
+          trackUserLocation={true}
+        />
+      </ReactMapGL>
+    );
+  }
+}
