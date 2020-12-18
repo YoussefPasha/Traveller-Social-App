@@ -81,7 +81,6 @@ const PlaceItem = (props) => {
             <Button inverse onClick={openAndCloseModalHandler}>
               VIEW ON MAP
             </Button>
-            {console.log(auth.userId + "  " + props.creatorId)}
             {auth.userId === props.creatorId && (
               <Button to={`/places/${props.id}`}>EDIT</Button>
             )}
