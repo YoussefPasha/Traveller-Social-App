@@ -1,5 +1,6 @@
 const Mongoose = require("mongoose");
 const { validationResult } = require("express-validator");
+const fs = require("fs");
 
 const HttpError = require("../models/http-error");
 const getCoordinatesForAddress = require("../utils/location");
@@ -123,6 +124,8 @@ const deletePlace = async (req, res, next) => {
     return next(new HttpError("Could not find place for this id ", 404));
   }
 
+  const imagePath = place.image;
+
   try {
     const sess = await Mongoose.startSession();
     sess.startTransaction();
@@ -138,6 +141,9 @@ const deletePlace = async (req, res, next) => {
     return next(error);
   }
 
+  fs.unlink(imagePath, (err) => {
+    console.log(err);
+  });
   res.status(200).json({ message: "Deleted Success" });
 };
 
