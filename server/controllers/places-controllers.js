@@ -92,7 +92,13 @@ const updatePlace = async (req, res, next) => {
   try {
     place = await Place.findById(placeId);
   } catch (error) {
-    return next(new HttpError(error.message, 500));
+    return next(
+      new HttpError("Something went wrong, could not update place.", 500)
+    );
+  }
+
+  if (place.creator.toString() !== req.userData.userId) {
+    return next(new HttpError("You are not allowed to edit this place.", 401));
   }
 
   place.title = title;
@@ -125,6 +131,10 @@ const deletePlace = async (req, res, next) => {
   }
 
   const imagePath = place.image;
+
+  if (place.creator.toString() !== req.userData.userId) {
+    return next(new HttpError("You are not allowed to edit this place.", 401));
+  }
 
   try {
     const sess = await Mongoose.startSession();
