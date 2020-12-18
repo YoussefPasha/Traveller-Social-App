@@ -106,7 +106,12 @@ const Auth = () => {
         <hr />
         <form onSubmit={authSubmitHandler}>
           {!isLoginMode && (
-            <ImageUpload id="image" center onInput={inputHandler} />
+            <ImageUpload
+              id="image"
+              center
+              onInput={inputHandler}
+              errorText={"Please Provide Your Image"}
+            />
           )}
           {!isLoginMode && (
             <Input
