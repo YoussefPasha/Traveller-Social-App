@@ -42,7 +42,7 @@ const createPlace = async (req, res, next) => {
   if (!error.isEmpty()) {
     return next(new HttpError("Invalid data entry", 422));
   }
-  const { creator, title, description, address } = req.body;
+  const { title, description, address } = req.body;
   const coordinates = getCoordinatesForAddress(address);
   const createdPlace = new Place({
     title,
@@ -50,13 +50,13 @@ const createPlace = async (req, res, next) => {
     address,
     location: coordinates,
     image: req.file.path,
-    creator,
+    creator: req.userData.userId,
   });
 
   let user;
 
   try {
-    user = await User.findById(creator);
+    user = await User.findById(req.userData.userId);
   } catch (error) {
     return next(new HttpError("Creating Place Failed, Please try again", 500));
   }
@@ -133,7 +133,9 @@ const deletePlace = async (req, res, next) => {
   const imagePath = place.image;
 
   if (place.creator.id !== req.userData.userId) {
-    return next(new HttpError("You are not allowed to delete this place.", 401));
+    return next(
+      new HttpError("You are not allowed to delete this place.", 401)
+    );
   }
 
   try {
