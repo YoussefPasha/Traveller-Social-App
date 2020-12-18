@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
@@ -58,7 +59,21 @@ const signup = async (req, res, next) => {
   } catch (error) {
     return next(new HttpError("Create User Failed", 500));
   }
-  res.status(201).json({ place: createUser.toObject({ getters: true }) });
+
+  let token;
+  try {
+    token = jwt.sign(
+      { userId: createUser.id, email: createUser.email },
+      "super_secret_dont_share_or_use",
+      { expiresIn: "1h" }
+    );
+  } catch (error) {
+    return next(new HttpError("Create User Failed", 500));
+  }
+
+  res
+    .status(201)
+    .json({ userId: createUser.id, email: createUser.email, token: token });
 };
 
 const login = async (req, res, next) => {
@@ -91,9 +106,21 @@ const login = async (req, res, next) => {
     );
   }
 
+  let token;
+  try {
+    token = jwt.sign(
+      { userId: existingUser.id, email: existingUser.email },
+      "super_secret_dont_share_or_use",
+      { expiresIn: "1h" }
+    );
+  } catch (error) {
+    return next(new HttpError("Logging in Failed", 500));
+  }
+
   res.json({
-    message: "Logged in!",
-    user: existingUser.toObject({ getters: true }),
+    userId: existingUser.id,
+    email: existingUser.email,
+    token: token,
   });
 };
 
