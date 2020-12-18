@@ -66,7 +66,7 @@ const PlaceItem = (props) => {
           <div className="place-item__image">
             <img
               style={{ objectFit: "fill" }}
-              src={props.image}
+              src={`http://localhost:5000/${props.image}`}
               alt={props.title}
             />
           </div>
@@ -79,6 +79,7 @@ const PlaceItem = (props) => {
             <Button inverse onClick={openAndCloseModalHandler}>
               VIEW ON MAP
             </Button>
+            {console.log(auth.userId + "  " + props.creatorId)}
             {auth.userId === props.creatorId && (
               <Button to={`/places/${props.id}`}>EDIT</Button>
             )}

@@ -48,8 +48,7 @@ const createPlace = async (req, res, next) => {
     description,
     address,
     location: coordinates,
-    image:
-      "https://images.squarespace-cdn.com/content/v1/53170656e4b04f773bf88c62/1582219584487-3OAPNCAZBQ3FVXGZ6BK9/ke17ZwdGBToddI8pDm48kJ7b_czD8K-GlrMxD5SCZRIUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHb4Mgx5VOko7O0Fa25dY_3m0NvURTqMSdutKBeg48siOabULyivEAjpE6UPV3N36/invite-to-paradise-maldives-holiday-honeymoon-packages+2.jpg",
+    image: req.file.path,
     creator,
   });
 
