@@ -1,0 +1,8 @@
+{
+    "env": {
+        "DB_USER": "YoussefPasha",
+        "DB_PASSWORD": "21205787",
+        "DB_NAME": "Social_Places",
+        "JWT_KEY": "super_duper_dont_share_or_use"
+    }
+}

@@ -37,8 +37,7 @@ app.use((req, res, next) => {
 // special error handling middleware function
 app.use((error, req, res, next) => {
   if (req.file) {
-    fs.unlink(req.file.path, (error) => {
-    });
+    fs.unlink(req.file.path, (error) => {});
   }
   if (res.headerSent) {
     return next(error);
@@ -49,11 +48,10 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://YoussefPasha:21205787@assd.xhmbd.mongodb.net/Social_Places?retryWrites=true&w=majority",
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@assd.xhmbd.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
     { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }
   )
   .then(() => {
     app.listen(5000);
   })
-  .catch((err) => {
-  });
+  .catch((err) => {});
