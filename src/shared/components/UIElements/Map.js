@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Component } from "react";
-import ReactMapGL, { GeolocateControl } from "react-map-gl";
+import ReactMapGL, { NavigationControl } from "react-map-gl";
 
 let secretKey = process.env.REACT_APP_MAP_BOX_SECRET_KEY;
 
@@ -9,7 +9,7 @@ export default class Map extends Component {
     viewport: {
       longitude: this.props.center.lng,
       latitude: this.props.center.lat,
-      zoom: 14,
+      zoom: 12,
     },
   };
 
@@ -17,16 +17,15 @@ export default class Map extends Component {
     const { viewport } = this.state;
     return (
       <ReactMapGL
-        {...viewport}
         mapboxApiAccessToken={secretKey}
-        width="100vw"
-        height="100vh"
+        {...viewport}
+        width="100%"
+        height="100%"
         onViewportChange={(viewport) => this.setState({ viewport })}
       >
-        <GeolocateControl
-          positionOptions={{ enableHighAccuracy: true }}
-          trackUserLocation={true}
-        />
+        <div style={{ position: "absolute", right: 0 }}>
+          <NavigationControl />
+        </div>
       </ReactMapGL>
     );
   }
